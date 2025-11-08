@@ -15,6 +15,13 @@ export default defineConfig({
     video: 'retain-on-failure',
   },
 
+  reporter: [
+    ['html', { open: 'never', outputFolder: 'playwright-report' }],
+    ['list'],
+    ['json', { outputFile: 'test-results/results.json' }],
+    ['junit', { outputFile: 'test-results/junit.xml' }],
+  ],
+
   projects: [
     {
       name: 'setup',
