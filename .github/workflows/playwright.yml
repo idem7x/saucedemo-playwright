@@ -9,6 +9,11 @@ on:
         type: string
         default: 'all'
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -41,14 +46,6 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-
-      - name: Deploy report to GitHub Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./playwright-report
-          destination_dir: reports/${{ github.run_number }}
 
       - name: Upload test results
         if: always()
