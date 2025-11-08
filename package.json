@@ -1,0 +1,31 @@
+{
+  "name": "saucedemo-playwright",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:chrome": "npx playwright test --headed --project=chromium",
+    "test:ui": "npx playwright test --headed --ui --project=chromium",
+    "test:report": "npx playwright show-report",
+    "test:debug": "npx playwright test --debug",
+    "codegen": "npx playwright codegen saucedemo.com",
+    "install:drivers": "npx playwright install",
+    "install:all": "npm install && npm run install:drivers",
+    "lint": "npx eslint . --ext .ts",
+    "lint:fix": "npx eslint . --ext .ts --fix",
+    "format": "npx prettier --write .",
+    "prepare": "npx playwright install-deps",
+    "clean": "rm -rf node_modules/ && rm package-lock.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.10.0",
+    "dotenv": "^17.2.3"
+  }
+}
