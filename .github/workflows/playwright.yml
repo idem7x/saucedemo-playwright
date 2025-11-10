@@ -13,6 +13,7 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  checks: write
 
 jobs:
   test:
@@ -64,3 +65,4 @@ jobs:
         with:
           files: |
             junit-results/*.xml
+          check_name: 'Playwright Test Results'
