@@ -1,18 +1,21 @@
-import { test, expect } from '@playwright/test';
-import { InventoryPage } from '../../pageobjects/InventoryPage';
+import { test, expect } from '../../fixtures/fixtures';
 
+/**
+ * Inventory Page Tests - Using Fixtures with Auth from Setup
+ *
+ * Assumes authentication is handled in global setup or project setup
+ * Fixtures automatically provide initialized page objects
+ */
 test.describe('Inventory Page Tests', () => {
-    let inventoryPage: InventoryPage;
 
-    test.beforeEach(async ({ page }) => {
-        inventoryPage = new InventoryPage(page);
-
-        // Assuming login is done before accessing inventory page
-        await inventoryPage.goto('https://www.saucedemo.com/inventory.html');
+    test.beforeEach(async ({ inventoryPage }) => {
+        // ✅ No need to declare inventoryPage - it comes from fixture!
+        // ✅ If auth is in setup, user is already logged in
+        await inventoryPage.goToInventoryPage();
         await inventoryPage.waitForInventoryPageLoad();
     });
 
-    test('should display inventory page correctly', async () => {
+    test('should display inventory page correctly', async ({ inventoryPage }) => {
         const pageTitle = await inventoryPage.getPageTitle();
         expect(pageTitle).toBe('Products');
 
@@ -20,7 +23,7 @@ test.describe('Inventory Page Tests', () => {
         expect(itemCount).toBeGreaterThan(0);
     });
 
-    test('should add item to cart using inventory item component', async () => {
+    test('should add item to cart using inventory item component', async ({ inventoryPage }) => {
         // Get first inventory item
         const firstItem = await inventoryPage.getInventoryItemByIndex(0);
         const itemName = await firstItem.getName();
@@ -37,7 +40,7 @@ test.describe('Inventory Page Tests', () => {
         expect(cartCount).toBe(1);
     });
 
-    test('should add item to cart by name', async () => {
+    test('should add item to cart by name', async ({ inventoryPage }) => {
         const itemName = 'Sauce Labs Backpack';
         await inventoryPage.addItemToCartByName(itemName);
 
@@ -45,7 +48,7 @@ test.describe('Inventory Page Tests', () => {
         expect(cartCount).toBe(1);
     });
 
-    test('should get item details from inventory item component', async () => {
+    test('should get item details from inventory item component', async ({ inventoryPage }) => {
         const item = await inventoryPage.getInventoryItemByIndex(0);
 
         const name = await item.getName();
@@ -59,7 +62,7 @@ test.describe('Inventory Page Tests', () => {
         expect(priceNumber).toBeGreaterThan(0);
     });
 
-    test('should navigate using navigation component', async () => {
+    test('should navigate using navigation component', async ({ inventoryPage }) => {
         // Using composition - navigation component
         await inventoryPage.navigation.openMenu();
 
@@ -69,7 +72,7 @@ test.describe('Inventory Page Tests', () => {
         await inventoryPage.navigation.closeMenu();
     });
 
-    test('should logout using navigation component', async () => {
+    test('should logout using navigation component', async ({ inventoryPage }) => {
         await inventoryPage.navigation.logout();
 
         // Verify redirect to login page
@@ -77,21 +80,21 @@ test.describe('Inventory Page Tests', () => {
         expect(currentUrl).toContain('saucedemo.com');
     });
 
-    test('should sort items alphabetically', async () => {
+    test('should sort items alphabetically', async ({ inventoryPage }) => {
         await inventoryPage.sortBy('az');
 
         const isSorted = await inventoryPage.areItemsSortedAZ();
         expect(isSorted).toBeTruthy();
     });
 
-    test('should sort items by price low to high', async () => {
+    test('should sort items by price low to high', async ({ inventoryPage }) => {
         await inventoryPage.sortBy('lohi');
 
         const isSorted = await inventoryPage.areItemsSortedLowToHigh();
         expect(isSorted).toBeTruthy();
     });
 
-    test('should add multiple items to cart', async () => {
+    test('should add multiple items to cart', async ({ inventoryPage }) => {
         const itemsToAdd = [
             'Sauce Labs Backpack',
             'Sauce Labs Bike Light'
@@ -103,7 +106,7 @@ test.describe('Inventory Page Tests', () => {
         expect(cartCount).toBe(itemsToAdd.length);
     });
 
-    test('should remove item from cart', async () => {
+    test('should remove item from cart', async ({ inventoryPage }) => {
         // First add item
         const item = await inventoryPage.getInventoryItemByIndex(0);
         await item.addToCart();
@@ -118,7 +121,7 @@ test.describe('Inventory Page Tests', () => {
         expect(cartCount).toBe(0);
     });
 
-    test('should get all item names and prices', async () => {
+    test('should get all item names and prices', async ({ inventoryPage }) => {
         const names = await inventoryPage.getAllItemNames();
         const prices = await inventoryPage.getAllItemPrices();
 
@@ -127,14 +130,14 @@ test.describe('Inventory Page Tests', () => {
         expect(names.length).toBe(prices.length);
     });
 
-    test('should navigate to cart page', async () => {
+    test('should navigate to cart page', async ({ inventoryPage }) => {
         await inventoryPage.goToCart();
 
         const currentUrl = inventoryPage.getCurrentUrl();
         expect(currentUrl).toContain('cart.html');
     });
 
-    test('should click item name to view details', async () => {
+    test('should click item name to view details', async ({ inventoryPage }) => {
         const item = await inventoryPage.getInventoryItemByIndex(0);
         await item.clickName();
 
