@@ -12,12 +12,7 @@ test.describe('Problem User - Known Issues', () => {
         await expect(firstImage).toBeVisible();
 
         const src = await firstImage.getAttribute('src');
-
-        // Перевіряємо що src існує
         expect(src).not.toBeNull();
-
-        // Перевіряємо що зображення дійсно мають проблеми
-        // Problem user показує неправильні картинки
         console.log('Image src:', src);
 
         // Альтернативно: перевірити що всі картинки однакові (це баг problem_user)
